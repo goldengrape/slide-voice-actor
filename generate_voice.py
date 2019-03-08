@@ -17,14 +17,19 @@ import urllib.parse
 import json
 
 
-# In[2]:
+# 设定输出音频的位置和输入文本文件的位置
+
+# In[1]:
 
 
-OUTPUT_FILE = "data/output.mp3"    # 输出音频的保存路径，请根据自己的情况替换
-txt_file="data/人工晶体度数计算.txt"
-with open(txt_file, "r") as txt_file:  
-    TEXT = txt_file.read()
+if __name__ == "__main__":
+    OUTPUT_FILE = "data/output.mp3"    # 输出音频的保存路径，请根据自己的情况替换
+    txt_file="data/人工晶体度数计算.txt"
+    with open(txt_file, "r") as txt_file:  
+        TEXT = txt_file.read()
 
+
+# 按照讯飞的要求, 分别配置设置的字符串, http请求的head和body
 
 # In[3]:
 
@@ -60,10 +65,12 @@ def construct_urlencode_utf8(t):
     return body_utf8
 
 
+# 将长的txt
+
 # In[4]:
 
 
-def xunfei_tts(TEXT, Param, api, max_length=400):
+def xunfei_tts(TEXT, Param, api, max_length=300):
     data=b''
     split_TEXT_list=[TEXT[i:i+max_length] for i in range(0, len(TEXT), max_length)]
     for t in split_TEXT_list:
@@ -74,7 +81,7 @@ def xunfei_tts(TEXT, Param, api, max_length=400):
             headers=construct_header(api, construct_base64_str(Param)))
         response = urllib.request.urlopen(req)
         data+=response.read()
-        time.sleep(5)
+#         time.sleep(5)
     return data
 
 def tts(TEXT):
@@ -91,20 +98,22 @@ def tts(TEXT):
         "pitch": "50",    #音高[0,100]
         "engine_type": "aisound"    #引擎类型。aisound（普通效果），intp65（中文），intp65_en（英文）
     }
-    return xunfei_tts(TEXT, Param,api,max_length=400)
+    return xunfei_tts(TEXT, Param,api,max_length=300)
 
 
 # In[5]:
 
 
-data=tts(TEXT)
+if __name__ == "__main__":
+    data=tts(TEXT)
+    out_file = open(OUTPUT_FILE, 'wb')
+    out_file.write(data)
+    out_file.close()
+    print('输出文件: ' + OUTPUT_FILE)
 
 
 # In[6]:
 
 
-out_file = open(OUTPUT_FILE, 'wb')
-out_file.write(data)
-out_file.close()
-print('输出文件: ' + OUTPUT_FILE)
+
 
