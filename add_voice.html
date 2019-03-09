@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>ppt_extract</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>add_voice</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11888,6 +11888,7 @@ div#notebook {
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">save_notes_voice</span><span class="p">(</span><span class="n">voice_dict</span><span class="p">,</span><span class="n">images_path</span><span class="p">):</span>
+    
     <span class="n">temp_file_dict</span><span class="o">=</span><span class="p">{}</span>
     <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">voice_data</span> <span class="ow">in</span> <span class="n">voice_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">temp_filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">images_path</span><span class="p">,</span><span class="s2">&quot;temp_</span><span class="si">{:03d}</span><span class="s2">.mp3&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>

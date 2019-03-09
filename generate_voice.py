@@ -19,12 +19,12 @@ import json
 
 # 设定输出音频的位置和输入文本文件的位置
 
-# In[1]:
+# In[2]:
 
 
 if __name__ == "__main__":
     OUTPUT_FILE = "data/output.mp3"    # 输出音频的保存路径，请根据自己的情况替换
-    txt_file="data/人工晶体度数计算.txt"
+    txt_file="data/test.txt"
     with open(txt_file, "r") as txt_file:  
         TEXT = txt_file.read()
 
@@ -92,10 +92,10 @@ def tts(TEXT):
     Param = {
         "auf": "audio/L16;rate=16000",    #音频采样率
         "aue": "lame",    #音频编码，raw(生成wav)或lame(生成mp3)
-        "voice_name": "xiaoyan",
+        "voice_name": "aisjiuxu",
         "speed": "50",    #语速[0,100]
         "volume": "77",    #音量[0,100]
-        "pitch": "50",    #音高[0,100]
+        "pitch": "30",    #音高[0,100]
         "engine_type": "aisound"    #引擎类型。aisound（普通效果），intp65（中文），intp65_en（英文）
     }
     return xunfei_tts(TEXT, Param,api,max_length=300)
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     print('输出文件: ' + OUTPUT_FILE)
 
 
-# In[6]:
+# In[ ]:
 
 
 
