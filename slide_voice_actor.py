@@ -4,109 +4,129 @@
 # # 使用mac自带的TTS引擎为PPT配音
 # 
 
+# ## 初始化
+
 # In[1]:
 
 
-import sys, os , subprocess
+import sys, os , subprocess, time
 from pptx import Presentation
 from  AppKit import NSSpeechSynthesizer
 import Foundation
 from pptx.util import Inches
 
 
-# ## 读取ppt中每页的注释
-
 # In[2]:
 
 
-def get_notes_text(ppt_filename):
+def read_pptx(ppt_filename):
     prs = Presentation(ppt_filename)
-    notes_dict={}
-    for index, slide in enumerate(prs.slides):
-        notes_slide = slide.notes_slide
-        text = notes_slide.notes_text_frame.text
-        notes_dict[index]=text
-    return notes_dict
+    return prs
+
+def init_tts(rate=200):
+    nssp = NSSpeechSynthesizer
+    ve = nssp.alloc().init()
+    ve.setRate_(rate)
+    return ve
 
 
-# ## 将每页注释用tts转换成音频文件
+# ## 读取ppt中每页的注释
 
 # In[3]:
 
 
-def save_tts(TEXT, filename):
-    nssp = NSSpeechSynthesizer
-    ve = nssp.alloc().init()
-    ve.setRate_(200)
-    url = Foundation.NSURL.fileURLWithPath_(filename)
-    ve.startSpeakingString_toURL_(TEXT,url)
-    return filename
+def get_notes_text(slide):
+    notes_slide = slide.notes_slide
+    note = notes_slide.notes_text_frame.text
+    return note
 
+
+# ## 将每页注释用tts转换成音频文件
 
 # In[4]:
 
 
-def save_notes_voice(notes_dict):
-    voice_file_dict={}
-    
-    for index, text in notes_dict.items():
-        voice_filename= "temp_tts_{:3d}.aiff".format(index)
-        voice_file_dict[index]=save_tts(text,voice_filename )
-    return voice_file_dict
+def save_tts(ve, TEXT, filename):
+    url = Foundation.NSURL.fileURLWithPath_(filename)
+    s=ve.startSpeakingString_toURL_(TEXT,url)    
+    if not(s):
+        print("TTS failed") 
+    return filename
 
-
-# ## 将每个音频文件插入到ppt页面中
 
 # In[5]:
 
 
-def insert_voice(voice_file_dict, ppt_filename, output_filename):
-    prs = Presentation(ppt_filename)
-    left = top = Inches(0.0)
-    width = height = Inches(1.0)
+def save_notes_voice(ve, text, page_number):
+    voice_filename= "temp_tts_{:3d}.aiff".format(page_number)
+    voice_filename= save_tts(ve, text,voice_filename )
+    return voice_filename
 
-    for index, slide in enumerate(prs.slides):
-        notes_slide = slide.notes_slide
-        shapes = slide.shapes
-        movie = shapes.add_movie(voice_file_dict[index], 
-                                 left , top , width , height, 
-                                 poster_frame_image=None, 
-                                 mime_type='video/unknown')
-
-#     ppt_path=os.path.dirname(ppt_filename)
-    prs.save(output_filename)
-
-
-# ## 清理掉临时文件
 
 # In[6]:
 
 
-def clean_temp(voice_file_dict):
-    for index, filename in voice_file_dict.items():
-        os.remove(filename)
+def convert_aiff_to_mp3(filename):
+    # ffmpeg -i myinput.aif -f mp3 -acodec libmp3lame -ab 320000 -ar 44100 myoutput.mp3
+    mp3_filename=filename+".mp3"
+    subprocess.call(["ffmpeg",  
+                     "-i", filename,
+                     "-f", "mp3",
+                     "-acodec", "libmp3lame",
+                     "-ab", "128000",
+                     "-ar", "44100",
+                     mp3_filename])
+    print("made", mp3_filename)
+    return mp3_filename
+
+
+# ## 将每个音频文件插入到ppt页面中
+
+# In[7]:
+
+
+def insert_voice(voice_filename, slide):
+    left = top = Inches(0.0)
+    width = height = Inches(1.0)
+
+    shapes = slide.shapes
+    movie = shapes.add_movie(voice_filename, 
+                                 left , top , width , height, 
+                                 poster_frame_image=None, 
+                                 mime_type='video/unknown')
+
+
+# ## 清理掉临时文件
+
+# In[8]:
+
+
+def clean_temp(voice_filename):
+    os.remove(voice_filename)
     
 
 
 # # 包装
 
-# In[7]:
+# In[9]:
 
 
 def main(ppt_filename, output_filename):
-    notes_dict=get_notes_text(ppt_filename)
-    voice_file_dict=save_notes_voice(notes_dict)
-    insert_voice(voice_file_dict, ppt_filename, output_filename)
-    clean_temp(voice_file_dict)
+    ve=init_tts(rate=200)
+    prs=read_pptx(ppt_filename)
+    for index, slide in enumerate(prs.slides): 
+        note=get_notes_text(slide)
+        voice_filename=save_notes_voice(ve, note, index)
+#         voice_filename=convert_aiff_to_mp3(voice_filename)
+        time.sleep(3)
+        insert_voice(voice_filename, slide)
+        print("Slide No. {}".format(index))
+#         clean_temp(voice_filename)
+    prs.save(output_filename)
+    print("save to ",output_filename)
 
 
-# In[8]:
-
-
-# clean_temp(voice_file_dict)
-
-
-# In[ ]:
+# In[10]:
 
 
 if __name__=="__main__":
@@ -119,5 +139,10 @@ if __name__=="__main__":
         output_filename=os.path.join(ppt_path, "output.pptx")
     else:
         print("Error, I need input filename")
+        
+    ppt_filename="data/test.pptx"
+    ppt_path=os.path.dirname(ppt_filename)
+    output_filename=os.path.join(ppt_path, "output.pptx")
+    
     main(ppt_filename, output_filename)
 

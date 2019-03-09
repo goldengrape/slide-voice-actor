@@ -11779,16 +11779,45 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="&#21021;&#22987;&#21270;">&#21021;&#22987;&#21270;<a class="anchor-link" href="#&#21021;&#22987;&#21270;">&#182;</a></h2>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span> <span class="o">,</span> <span class="nn">subprocess</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span> <span class="o">,</span> <span class="nn">subprocess</span><span class="o">,</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">pptx</span> <span class="k">import</span> <span class="n">Presentation</span>
 <span class="kn">from</span>  <span class="nn">AppKit</span> <span class="k">import</span> <span class="n">NSSpeechSynthesizer</span>
 <span class="kn">import</span> <span class="nn">Foundation</span>
 <span class="kn">from</span> <span class="nn">pptx.util</span> <span class="k">import</span> <span class="n">Inches</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">read_pptx</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">):</span>
+    <span class="n">prs</span> <span class="o">=</span> <span class="n">Presentation</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prs</span>
+
+<span class="k">def</span> <span class="nf">init_tts</span><span class="p">(</span><span class="n">rate</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
+    <span class="n">nssp</span> <span class="o">=</span> <span class="n">NSSpeechSynthesizer</span>
+    <span class="n">ve</span> <span class="o">=</span> <span class="n">nssp</span><span class="o">.</span><span class="n">alloc</span><span class="p">()</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+    <span class="n">ve</span><span class="o">.</span><span class="n">setRate_</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ve</span>
 </pre></div>
 
 </div>
@@ -11806,17 +11835,13 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_notes_text</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">):</span>
-    <span class="n">prs</span> <span class="o">=</span> <span class="n">Presentation</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">)</span>
-    <span class="n">notes_dict</span><span class="o">=</span><span class="p">{}</span>
-    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">slide</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">prs</span><span class="o">.</span><span class="n">slides</span><span class="p">):</span>
-        <span class="n">notes_slide</span> <span class="o">=</span> <span class="n">slide</span><span class="o">.</span><span class="n">notes_slide</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="n">notes_slide</span><span class="o">.</span><span class="n">notes_text_frame</span><span class="o">.</span><span class="n">text</span>
-        <span class="n">notes_dict</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">=</span><span class="n">text</span>
-    <span class="k">return</span> <span class="n">notes_dict</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_notes_text</span><span class="p">(</span><span class="n">slide</span><span class="p">):</span>
+    <span class="n">notes_slide</span> <span class="o">=</span> <span class="n">slide</span><span class="o">.</span><span class="n">notes_slide</span>
+    <span class="n">note</span> <span class="o">=</span> <span class="n">notes_slide</span><span class="o">.</span><span class="n">notes_text_frame</span><span class="o">.</span><span class="n">text</span>
+    <span class="k">return</span> <span class="n">note</span>
 </pre></div>
 
 </div>
@@ -11834,15 +11859,14 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">save_tts</span><span class="p">(</span><span class="n">TEXT</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-    <span class="n">nssp</span> <span class="o">=</span> <span class="n">NSSpeechSynthesizer</span>
-    <span class="n">ve</span> <span class="o">=</span> <span class="n">nssp</span><span class="o">.</span><span class="n">alloc</span><span class="p">()</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-    <span class="n">ve</span><span class="o">.</span><span class="n">setRate_</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">save_tts</span><span class="p">(</span><span class="n">ve</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">Foundation</span><span class="o">.</span><span class="n">NSURL</span><span class="o">.</span><span class="n">fileURLWithPath_</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-    <span class="n">ve</span><span class="o">.</span><span class="n">startSpeakingString_toURL_</span><span class="p">(</span><span class="n">TEXT</span><span class="p">,</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">=</span><span class="n">ve</span><span class="o">.</span><span class="n">startSpeakingString_toURL_</span><span class="p">(</span><span class="n">TEXT</span><span class="p">,</span><span class="n">url</span><span class="p">)</span>    
+    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TTS failed&quot;</span><span class="p">)</span> 
     <span class="k">return</span> <span class="n">filename</span>
 </pre></div>
 
@@ -11853,16 +11877,37 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">save_notes_voice</span><span class="p">(</span><span class="n">notes_dict</span><span class="p">):</span>
-    <span class="n">voice_file_dict</span><span class="o">=</span><span class="p">{}</span>
-    
-    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">notes_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">voice_filename</span><span class="o">=</span> <span class="s2">&quot;temp_tts_</span><span class="si">{:3d}</span><span class="s2">.aiff&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
-        <span class="n">voice_file_dict</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">=</span><span class="n">save_tts</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="n">voice_filename</span> <span class="p">)</span>
-    <span class="k">return</span> <span class="n">voice_file_dict</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">save_notes_voice</span><span class="p">(</span><span class="n">ve</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">page_number</span><span class="p">):</span>
+    <span class="n">voice_filename</span><span class="o">=</span> <span class="s2">&quot;temp_tts_</span><span class="si">{:3d}</span><span class="s2">.aiff&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">page_number</span><span class="p">)</span>
+    <span class="n">voice_filename</span><span class="o">=</span> <span class="n">save_tts</span><span class="p">(</span><span class="n">ve</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span><span class="n">voice_filename</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">voice_filename</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">convert_aiff_to_mp3</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="c1"># ffmpeg -i myinput.aif -f mp3 -acodec libmp3lame -ab 320000 -ar 44100 myoutput.mp3</span>
+    <span class="n">mp3_filename</span><span class="o">=</span><span class="n">filename</span><span class="o">+</span><span class="s2">&quot;.mp3&quot;</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s2">&quot;ffmpeg&quot;</span><span class="p">,</span>  
+                     <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span>
+                     <span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;mp3&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;-acodec&quot;</span><span class="p">,</span> <span class="s2">&quot;libmp3lame&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;-ab&quot;</span><span class="p">,</span> <span class="s2">&quot;128000&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;-ar&quot;</span><span class="p">,</span> <span class="s2">&quot;44100&quot;</span><span class="p">,</span>
+                     <span class="n">mp3_filename</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;made&quot;</span><span class="p">,</span> <span class="n">mp3_filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mp3_filename</span>
 </pre></div>
 
 </div>
@@ -11880,24 +11925,18 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">insert_voice</span><span class="p">(</span><span class="n">voice_file_dict</span><span class="p">,</span> <span class="n">ppt_filename</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">):</span>
-    <span class="n">prs</span> <span class="o">=</span> <span class="n">Presentation</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">insert_voice</span><span class="p">(</span><span class="n">voice_filename</span><span class="p">,</span> <span class="n">slide</span><span class="p">):</span>
     <span class="n">left</span> <span class="o">=</span> <span class="n">top</span> <span class="o">=</span> <span class="n">Inches</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
     <span class="n">width</span> <span class="o">=</span> <span class="n">height</span> <span class="o">=</span> <span class="n">Inches</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">slide</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">prs</span><span class="o">.</span><span class="n">slides</span><span class="p">):</span>
-        <span class="n">notes_slide</span> <span class="o">=</span> <span class="n">slide</span><span class="o">.</span><span class="n">notes_slide</span>
-        <span class="n">shapes</span> <span class="o">=</span> <span class="n">slide</span><span class="o">.</span><span class="n">shapes</span>
-        <span class="n">movie</span> <span class="o">=</span> <span class="n">shapes</span><span class="o">.</span><span class="n">add_movie</span><span class="p">(</span><span class="n">voice_file_dict</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> 
+    <span class="n">shapes</span> <span class="o">=</span> <span class="n">slide</span><span class="o">.</span><span class="n">shapes</span>
+    <span class="n">movie</span> <span class="o">=</span> <span class="n">shapes</span><span class="o">.</span><span class="n">add_movie</span><span class="p">(</span><span class="n">voice_filename</span><span class="p">,</span> 
                                  <span class="n">left</span> <span class="p">,</span> <span class="n">top</span> <span class="p">,</span> <span class="n">width</span> <span class="p">,</span> <span class="n">height</span><span class="p">,</span> 
                                  <span class="n">poster_frame_image</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                                  <span class="n">mime_type</span><span class="o">=</span><span class="s1">&#39;video/unknown&#39;</span><span class="p">)</span>
-
-<span class="c1">#     ppt_path=os.path.dirname(ppt_filename)</span>
-    <span class="n">prs</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output_filename</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11915,12 +11954,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">clean_temp</span><span class="p">(</span><span class="n">voice_file_dict</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">voice_file_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">clean_temp</span><span class="p">(</span><span class="n">voice_filename</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">voice_filename</span><span class="p">)</span>
     
 </pre></div>
 
@@ -11939,14 +11977,22 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">):</span>
-    <span class="n">notes_dict</span><span class="o">=</span><span class="n">get_notes_text</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">)</span>
-    <span class="n">voice_file_dict</span><span class="o">=</span><span class="n">save_notes_voice</span><span class="p">(</span><span class="n">notes_dict</span><span class="p">)</span>
-    <span class="n">insert_voice</span><span class="p">(</span><span class="n">voice_file_dict</span><span class="p">,</span> <span class="n">ppt_filename</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">)</span>
-    <span class="n">clean_temp</span><span class="p">(</span><span class="n">voice_file_dict</span><span class="p">)</span>
+    <span class="n">ve</span><span class="o">=</span><span class="n">init_tts</span><span class="p">(</span><span class="n">rate</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">prs</span><span class="o">=</span><span class="n">read_pptx</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">slide</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">prs</span><span class="o">.</span><span class="n">slides</span><span class="p">):</span> 
+        <span class="n">note</span><span class="o">=</span><span class="n">get_notes_text</span><span class="p">(</span><span class="n">slide</span><span class="p">)</span>
+        <span class="n">voice_filename</span><span class="o">=</span><span class="n">save_notes_voice</span><span class="p">(</span><span class="n">ve</span><span class="p">,</span> <span class="n">note</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+<span class="c1">#         voice_filename=convert_aiff_to_mp3(voice_filename)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">insert_voice</span><span class="p">(</span><span class="n">voice_filename</span><span class="p">,</span> <span class="n">slide</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Slide No. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+<span class="c1">#         clean_temp(voice_filename)</span>
+    <span class="n">prs</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output_filename</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;save to &quot;</span><span class="p">,</span><span class="n">output_filename</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11956,10 +12002,25 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># clean_temp(voice_file_dict)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="o">&gt;=</span><span class="mi">3</span> <span class="p">:</span>
+        <span class="n">ppt_filename</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">output_filename</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span> <span class="p">:</span>
+        <span class="n">ppt_filename</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">ppt_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">)</span>
+        <span class="n">output_filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ppt_path</span><span class="p">,</span> <span class="s2">&quot;output.pptx&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error, I need input filename&quot;</span><span class="p">)</span>
+        
+    <span class="n">ppt_filename</span><span class="o">=</span><span class="s2">&quot;data/test.pptx&quot;</span>
+    <span class="n">ppt_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">)</span>
+    <span class="n">output_filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ppt_path</span><span class="p">,</span> <span class="s2">&quot;output.pptx&quot;</span><span class="p">)</span>
+    
+    <span class="n">main</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11975,40 +12036,21 @@ div#notebook {
 <div class="prompt"></div>
 
 
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-8-ba4618f07a89&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>clean_temp<span class="ansi-blue-fg">(</span>voice_file_dict<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-red-fg">NameError</span>: name &#39;voice_file_dict&#39; is not defined</pre>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Slide No. 0
+Slide No. 1
+Slide No. 2
+Slide No. 3
+Slide No. 4
+Slide No. 5
+Slide No. 6
+Slide No. 7
+Slide No. 8
+Slide No. 9
+</pre>
 </div>
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="o">&gt;=</span><span class="mi">3</span> <span class="p">:</span>
-        <span class="n">ppt_filename</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">output_filename</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span> <span class="p">:</span>
-        <span class="n">ppt_filename</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">ppt_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">)</span>
-        <span class="n">output_filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ppt_path</span><span class="p">,</span> <span class="s2">&quot;output.pptx&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error, I need input filename&quot;</span><span class="p">)</span>
-    <span class="n">main</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">)</span>
-</pre></div>
-
-</div>
 </div>
 </div>
 

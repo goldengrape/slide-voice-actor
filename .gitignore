@@ -5,6 +5,10 @@ API_setup.txt
 # data files
 data/
 
+# audio files
+*.aiff
+*.mp3
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
