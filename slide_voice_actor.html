@@ -11793,9 +11793,10 @@ div#notebook {
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span> <span class="o">,</span> <span class="nn">subprocess</span><span class="o">,</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">pptx</span> <span class="k">import</span> <span class="n">Presentation</span>
 <span class="kn">from</span>  <span class="nn">AppKit</span> <span class="k">import</span> <span class="n">NSSpeechSynthesizer</span>
 <span class="kn">import</span> <span class="nn">Foundation</span>
+
+<span class="kn">from</span> <span class="nn">pptx</span> <span class="k">import</span> <span class="n">Presentation</span>
 <span class="kn">from</span> <span class="nn">pptx.util</span> <span class="k">import</span> <span class="n">Inches</span>
 </pre></div>
 
@@ -11891,30 +11892,6 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">convert_aiff_to_mp3</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="c1"># ffmpeg -i myinput.aif -f mp3 -acodec libmp3lame -ab 320000 -ar 44100 myoutput.mp3</span>
-    <span class="n">mp3_filename</span><span class="o">=</span><span class="n">filename</span><span class="o">+</span><span class="s2">&quot;.mp3&quot;</span>
-    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s2">&quot;ffmpeg&quot;</span><span class="p">,</span>  
-                     <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span>
-                     <span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;mp3&quot;</span><span class="p">,</span>
-                     <span class="s2">&quot;-acodec&quot;</span><span class="p">,</span> <span class="s2">&quot;libmp3lame&quot;</span><span class="p">,</span>
-                     <span class="s2">&quot;-ab&quot;</span><span class="p">,</span> <span class="s2">&quot;128000&quot;</span><span class="p">,</span>
-                     <span class="s2">&quot;-ar&quot;</span><span class="p">,</span> <span class="s2">&quot;44100&quot;</span><span class="p">,</span>
-                     <span class="n">mp3_filename</span><span class="p">])</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;made&quot;</span><span class="p">,</span> <span class="n">mp3_filename</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">mp3_filename</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -11925,7 +11902,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">insert_voice</span><span class="p">(</span><span class="n">voice_filename</span><span class="p">,</span> <span class="n">slide</span><span class="p">):</span>
@@ -11954,7 +11931,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">clean_temp</span><span class="p">(</span><span class="n">voice_filename</span><span class="p">):</span>
@@ -11977,7 +11954,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">ppt_filename</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">):</span>
@@ -11986,11 +11963,15 @@ div#notebook {
     <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">slide</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">prs</span><span class="o">.</span><span class="n">slides</span><span class="p">):</span> 
         <span class="n">note</span><span class="o">=</span><span class="n">get_notes_text</span><span class="p">(</span><span class="n">slide</span><span class="p">)</span>
         <span class="n">voice_filename</span><span class="o">=</span><span class="n">save_notes_voice</span><span class="p">(</span><span class="n">ve</span><span class="p">,</span> <span class="n">note</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
-<span class="c1">#         voice_filename=convert_aiff_to_mp3(voice_filename)</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1">#         now=time.time()</span>
+<span class="c1">#         while(not(os.path.isfile(voice_filename)) ):</span>
+<span class="c1">#             time.sleep(0.1)</span>
+<span class="c1">#             print(&quot;waiting for {} sec&quot;.format(time.time()-now))</span>
+        
         <span class="n">insert_voice</span><span class="p">(</span><span class="n">voice_filename</span><span class="p">,</span> <span class="n">slide</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Slide No. </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
-<span class="c1">#         clean_temp(voice_filename)</span>
+        <span class="n">clean_temp</span><span class="p">(</span><span class="n">voice_filename</span><span class="p">)</span>
     <span class="n">prs</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output_filename</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;save to &quot;</span><span class="p">,</span><span class="n">output_filename</span><span class="p">)</span>
 </pre></div>
@@ -12002,7 +11983,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
@@ -12047,6 +12028,7 @@ Slide No. 6
 Slide No. 7
 Slide No. 8
 Slide No. 9
+save to  data/output.pptx
 </pre>
 </div>
 </div>

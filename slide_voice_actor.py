@@ -10,9 +10,10 @@
 
 
 import sys, os , subprocess, time
-from pptx import Presentation
 from  AppKit import NSSpeechSynthesizer
 import Foundation
+
+from pptx import Presentation
 from pptx.util import Inches
 
 
@@ -63,26 +64,9 @@ def save_notes_voice(ve, text, page_number):
     return voice_filename
 
 
-# In[6]:
-
-
-def convert_aiff_to_mp3(filename):
-    # ffmpeg -i myinput.aif -f mp3 -acodec libmp3lame -ab 320000 -ar 44100 myoutput.mp3
-    mp3_filename=filename+".mp3"
-    subprocess.call(["ffmpeg",  
-                     "-i", filename,
-                     "-f", "mp3",
-                     "-acodec", "libmp3lame",
-                     "-ab", "128000",
-                     "-ar", "44100",
-                     mp3_filename])
-    print("made", mp3_filename)
-    return mp3_filename
-
-
 # ## 将每个音频文件插入到ppt页面中
 
-# In[7]:
+# In[6]:
 
 
 def insert_voice(voice_filename, slide):
@@ -98,7 +82,7 @@ def insert_voice(voice_filename, slide):
 
 # ## 清理掉临时文件
 
-# In[8]:
+# In[7]:
 
 
 def clean_temp(voice_filename):
@@ -108,7 +92,7 @@ def clean_temp(voice_filename):
 
 # # 包装
 
-# In[9]:
+# In[8]:
 
 
 def main(ppt_filename, output_filename):
@@ -117,16 +101,20 @@ def main(ppt_filename, output_filename):
     for index, slide in enumerate(prs.slides): 
         note=get_notes_text(slide)
         voice_filename=save_notes_voice(ve, note, index)
-#         voice_filename=convert_aiff_to_mp3(voice_filename)
         time.sleep(3)
+#         now=time.time()
+#         while(not(os.path.isfile(voice_filename)) ):
+#             time.sleep(0.1)
+#             print("waiting for {} sec".format(time.time()-now))
+        
         insert_voice(voice_filename, slide)
         print("Slide No. {}".format(index))
-#         clean_temp(voice_filename)
+        clean_temp(voice_filename)
     prs.save(output_filename)
     print("save to ",output_filename)
 
 
-# In[10]:
+# In[9]:
 
 
 if __name__=="__main__":
